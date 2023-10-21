@@ -26,7 +26,7 @@ struct Menu {
 	int ticket=0;//numero de ticket 
 	double TotalCompra=0;// Variable para almacenar el total de la compra
 	int Descuentos = 0;
-	string IVA = "16%% por precio unitario";
+	string IVA = "16% por precio unitario";
 	map<int, int> productosSeleccionados;// Mapa para almacenar los productos seleccionados
 
 	//Fecha
@@ -80,7 +80,6 @@ int main()
 
 	//Menu de Opciones creado con Switch
 	do {
-
 		printf("Elija una opcion:\n1.- Nueva Orden\n2.- Modificar Orden\n3.- Eliminar o Cancelar Orden\n4.- Lista de Ordenes\n5.- Limpiar Pantalla\n6.- Salir\n");
 		scanf_s("%i", &opcion);
 
@@ -96,7 +95,8 @@ int main()
 
 			nuevaOrden.RazonSocial;
 
-			nuevaOrden.Nombre;
+			// Copiar el nombre del empleado a la nueva orden
+			nuevaOrden.Nombre = empleado.Nombre; 
 
 			nuevaOrden.IVA;
 
@@ -130,7 +130,7 @@ int main()
 					nuevaOrden.TotalCompra += productos[opcion].second * 1.16;  // Sumar el precio del producto al total
 				}
 				else if (opcion != 0) {
-					printf("Opción no válida. Por favor, seleccione un producto válido.\n");
+					printf("Opcion no valida. Por favor, seleccione un producto valido.\n");
 				}
 			} while (opcion != 0);
 
@@ -149,14 +149,12 @@ int main()
 			Orden.push_back(nuevaOrden);
 
 
-			printf("Orden registrada\n");
-
-			cin.ignore();
-
-			return 0;
-
+			printf("Orden registrada\n\n");
+			break;
 
 		}
+			  
+
 			  //Modificar Orden	  
 		case 2: {}
 
@@ -164,39 +162,59 @@ int main()
 		case 3: {}
 
 			  //Lista de Ordenes
-		case 4: {
+		case 4:
 
-		}
-			  if (Orden.empty()) {
-				  printf("No hay citas registradas:\n\n\n");
+			if (Orden.empty()) {
+				printf("No hay ordenes registradas:\n\n");
 
-			  }
-			  else {
-				  printf("Registro de citas:\n");
-				  for (const Menu& Impr : Orden) {
-				  
-					  printf("Fecha: % 02d / % 02d / % d\n", Impr.Fecha->tm_mday, Impr.Fecha->tm_mon + 1, Impr.Fecha->tm_year+1900);
-					  printf("Empleado: %s\n", Impr.Nombre);
-					  printf();
+			}
+			else {
+				printf("Registro de ordenes:\n");
+				for (const Menu& Impr : Orden) {
 
-				  }
+					printf("%s\n", Impr.RazonSocial.c_str());
+					printf("Fecha: % 02d / % 02d / % d\n", Impr.Fecha->tm_mday, Impr.Fecha->tm_mon + 1, Impr.Fecha->tm_year + 1900);
+					printf("Empleado: %s\n", Impr.Nombre.c_str());
+					printf("Numero de Ticket: %d\n", Impr.ticket);
 
-				  }
+					//Imprime la lista de productos seleccionados
+					printf("\nProductos seleccionados:\n");
+					printf("%-40s %-10s %-10s\n", "Producto", "Cantidad", "Precio");
+					for (const auto& producto : Impr.productosSeleccionados) {
+						printf("%-40s %-10d $%-10.2f\n", productos[producto.first].first.c_str(), producto.second, productos[producto.first].second * producto.second * 1.16);
+					}
+					//Imprime la cantidad de productos
+					printf("Ha seleccionado %d productos. Gracias por su compra.\n", contador);
+					printf("IVA: %s\n", Impr.IVA.c_str());
+					printf("Descuentos: %d\n", Impr.Descuentos);
+					printf("Propina : 0\n"); //Aun no esta integrado
+					printf("Total a pagar: $%.2f\n\n", Impr.TotalCompra);  // Imprimir el total de la compra
 
-				  //Limpiar Pantalla
-		case 5: {
-			system("cls");
+
+				}
+				
+			}
 			break;
 
-		}
+				  //Limpiar Pantalla
+		case 5: 
+			system("cls");
+
+			break;
 
 			  //Salir
-		case 6: {}
+		case 6: 
+			return 0;
 
-		default: {}
+			break;
+
+
+		default: 
+			printf("Opcion incorrecta:\n\n");
 
 			  }
 
+			  cin.ignore();
 
 	} while (opcion != 6);
 
